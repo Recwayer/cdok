@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.7.2'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.apache.groovy:groovy'
+    implementation 'org.projectlombok:lombok:1.18.28'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
