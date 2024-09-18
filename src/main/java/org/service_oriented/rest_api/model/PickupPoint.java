@@ -1,11 +1,9 @@
 package org.service_oriented.rest_api.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -13,11 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "pickup_points")
-public class PickupPoint {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class PickupPoint extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
@@ -28,11 +22,10 @@ public class PickupPoint {
 
     private int capacity;
 
-    @OneToMany
+    @OneToMany(mappedBy = "pickupPoint", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Shipment> availableShipments;
 
-    public PickupPoint(Long id, String name, Address address, String workingHours, int capacity, List<Shipment> availableShipments) {
-        this.id = id;
+    public PickupPoint(String name, Address address, String workingHours, int capacity, List<Shipment> availableShipments) {
         this.name = name;
         this.address = address;
         this.workingHours = workingHours;
@@ -41,10 +34,6 @@ public class PickupPoint {
     }
 
     protected PickupPoint() {
-    }
-
-    public Long getId() {
-        return this.id;
     }
 
     public String getName() {
@@ -67,9 +56,6 @@ public class PickupPoint {
         return this.availableShipments;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public void setName(String name) {
         this.name = name;

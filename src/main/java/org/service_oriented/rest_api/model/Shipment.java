@@ -4,9 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import org.service_oriented.rest_api.model.enums.DeliveryType;
@@ -16,11 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "shipments")
-public class Shipment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Shipment extends BaseEntity {
     @Column(nullable = false)
     private String trackingNumber;
 
@@ -48,8 +41,11 @@ public class Shipment {
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryType;
 
-    public Shipment(Long id, String trackingNumber, ShipmentStatus status, double weight, User sender, User recipient, PickupPoint pickupPoint, String deliveryAddress, LocalDate shipmentDate, LocalDate estimatedDeliveryDate, DeliveryType deliveryType) {
-        this.id = id;
+    @ManyToOne
+    private Order order;
+
+
+    public Shipment(String trackingNumber, ShipmentStatus status, double weight, User sender, User recipient, PickupPoint pickupPoint, String deliveryAddress, LocalDate shipmentDate, LocalDate estimatedDeliveryDate, DeliveryType deliveryType, Order order) {
         this.trackingNumber = trackingNumber;
         this.status = status;
         this.weight = weight;
@@ -60,13 +56,10 @@ public class Shipment {
         this.shipmentDate = shipmentDate;
         this.estimatedDeliveryDate = estimatedDeliveryDate;
         this.deliveryType = deliveryType;
+        this.order = order;
     }
 
-    public Shipment() {
-    }
-
-    public Long getId() {
-        return this.id;
+    protected Shipment() {
     }
 
     public String getTrackingNumber() {
@@ -77,7 +70,7 @@ public class Shipment {
         return this.status;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return this.weight;
     }
 
@@ -109,9 +102,10 @@ public class Shipment {
         return this.deliveryType;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Order getOrder() {
+        return this.order;
     }
+
 
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
@@ -151,5 +145,9 @@ public class Shipment {
 
     public void setDeliveryType(DeliveryType deliveryType) {
         this.deliveryType = deliveryType;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

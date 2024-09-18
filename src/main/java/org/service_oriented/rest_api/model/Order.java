@@ -1,14 +1,6 @@
 package org.service_oriented.rest_api.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.service_oriented.rest_api.model.enums.OrderStatus;
 
 import java.time.LocalDate;
@@ -16,15 +8,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Order extends BaseEntity {
     @Column(nullable = false)
     private String orderNumber;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Shipment> shipments;
 
     private LocalDate orderDate;
@@ -34,8 +22,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    public Order(Long id, String orderNumber, List<Shipment> shipments, LocalDate orderDate, double totalCost, OrderStatus status) {
-        this.id = id;
+    public Order(String orderNumber, List<Shipment> shipments, LocalDate orderDate, double totalCost, OrderStatus status) {
         this.orderNumber = orderNumber;
         this.shipments = shipments;
         this.orderDate = orderDate;
@@ -46,9 +33,6 @@ public class Order {
     protected Order() {
     }
 
-    public Long getId() {
-        return this.id;
-    }
 
     public String getOrderNumber() {
         return this.orderNumber;
@@ -70,9 +54,6 @@ public class Order {
         return this.status;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;

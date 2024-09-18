@@ -13,10 +13,7 @@ import org.service_oriented.rest_api.model.enums.UserRole;
 
 @Entity
 @Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -31,8 +28,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public User(Long id, String name, String email, String phone, Address address, UserRole role) {
-        this.id = id;
+    public User(String name, String email, String phone, Address address, UserRole role) {
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -41,10 +37,6 @@ public class User {
     }
 
     protected User() {
-    }
-
-    public Long getId() {
-        return this.id;
     }
 
     public String getName() {
@@ -65,10 +57,6 @@ public class User {
 
     public UserRole getRole() {
         return this.role;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setName(String name) {
