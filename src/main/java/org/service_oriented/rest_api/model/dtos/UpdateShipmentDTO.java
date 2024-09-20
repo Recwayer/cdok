@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class UpdateShipmentDTO {
     private String trackingNumber;
     private ShipmentStatus status;
-    private double weight;
+    private Double weight;
     private UserDTO sender;
     private UserDTO recipient;
     private PickupPointDTO pickupPoint;

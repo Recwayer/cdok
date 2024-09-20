@@ -14,6 +14,6 @@ public class UpdateOrderDTO {
     private String orderNumber;
     private List<ShipmentDTO> shipments;
     private LocalDate orderDate;
-    private double totalCost;
+    private Double totalCost;
     private OrderStatus status;
 }

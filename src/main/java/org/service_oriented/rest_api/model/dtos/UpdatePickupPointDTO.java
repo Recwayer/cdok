@@ -13,6 +13,6 @@ public class UpdatePickupPointDTO {
     private String name;
     private AddressDTO address;
     private String workingHours;
-    private int capacity;
+    private Integer capacity;
     private List<ShipmentDTO> availableShipments;
 }
