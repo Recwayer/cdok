@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SaveOrderDTO {
     private String orderNumber;
-    private List<ShipmentDTO> shipments;
+    private List<Long> shipmentsIds;
     private LocalDate orderDate;
     private double totalCost;
     private OrderStatus status;

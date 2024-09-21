@@ -59,9 +59,8 @@ public class PickupPointServiceImpl implements PickupPointService {
         Optional.ofNullable(dto.getAddress()).ifPresent(existingPickupPoint::setAddress);
         Optional.ofNullable(dto.getWorkingHours()).ifPresent(existingPickupPoint::setWorkingHours);
         Optional.ofNullable(dto.getCapacity()).filter(capacity -> capacity > 0).ifPresent(existingPickupPoint::setCapacity);
-        Optional.ofNullable(dto.getAvailableShipments()).ifPresent(existingPickupPoint::setAvailableShipments);
 
-        return pickupPointMapper.toPickupPointDTO(pickupPointRepository.save(pickupPointMapper.toPickupPoint(existingPickupPoint)));
+        return pickupPointMapper.toPickupPointDTO(pickupPointRepository.save(pickupPointMapper.toPickupPoint(existingPickupPoint, dto.getAvailableShipmentsIds())));
     }
 
     @Override

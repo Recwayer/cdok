@@ -14,5 +14,5 @@ public class UpdatePickupPointDTO {
     private AddressDTO address;
     private String workingHours;
     private Integer capacity;
-    private List<ShipmentDTO> availableShipments;
+    private List<Long> availableShipmentsIds;
 }

@@ -1,11 +1,12 @@
 package org.service_oriented.rest_api.model;
 
 import jakarta.persistence.*;
+import lombok.experimental.SuperBuilder;
 import org.service_oriented.rest_api.model.enums.OrderStatus;
 
 import java.time.LocalDate;
 import java.util.List;
-
+@SuperBuilder
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {

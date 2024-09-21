@@ -1,5 +1,6 @@
 package org.service_oriented.rest_api.model.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.service_oriented.rest_api.model.enums.DeliveryType;
 import org.service_oriented.rest_api.model.enums.ShipmentStatus;
@@ -18,10 +19,8 @@ public class ShipmentDTO {
     private double weight;
     private UserDTO sender;
     private UserDTO recipient;
-    private PickupPointDTO pickupPoint;
     private String deliveryAddress;
     private LocalDate shipmentDate;
     private LocalDate estimatedDeliveryDate;
     private DeliveryType deliveryType;
-    private OrderDTO order;
 }

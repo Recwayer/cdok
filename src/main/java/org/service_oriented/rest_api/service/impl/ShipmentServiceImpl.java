@@ -1,6 +1,7 @@
 package org.service_oriented.rest_api.service.impl;
 
 import org.service_oriented.rest_api.mapper.ShipmentMapper;
+import org.service_oriented.rest_api.model.Shipment;
 import org.service_oriented.rest_api.model.dtos.SaveShipmentDTO;
 import org.service_oriented.rest_api.model.dtos.ShipmentDTO;
 import org.service_oriented.rest_api.model.dtos.UpdateShipmentDTO;
@@ -56,16 +57,12 @@ public class ShipmentServiceImpl implements ShipmentService {
         Optional.ofNullable(dto.getTrackingNumber()).ifPresent(existingShipment::setTrackingNumber);
         Optional.ofNullable(dto.getStatus()).ifPresent(existingShipment::setStatus);
         Optional.ofNullable(dto.getWeight()).filter(weight -> weight >= 0).ifPresent(existingShipment::setWeight);
-        Optional.ofNullable(dto.getSender()).ifPresent(existingShipment::setSender);
-        Optional.ofNullable(dto.getRecipient()).ifPresent(existingShipment::setRecipient);
-        Optional.ofNullable(dto.getPickupPoint()).ifPresent(existingShipment::setPickupPoint);
         Optional.ofNullable(dto.getDeliveryAddress()).ifPresent(existingShipment::setDeliveryAddress);
         Optional.ofNullable(dto.getShipmentDate()).ifPresent(existingShipment::setShipmentDate);
         Optional.ofNullable(dto.getEstimatedDeliveryDate()).ifPresent(existingShipment::setEstimatedDeliveryDate);
         Optional.ofNullable(dto.getDeliveryType()).ifPresent(existingShipment::setDeliveryType);
-        Optional.ofNullable(dto.getOrder()).ifPresent(existingShipment::setOrder);
 
-        return shipmentMapper.toShipmentDTO(shipmentRepository.save(shipmentMapper.toShipment(existingShipment)));
+        return shipmentMapper.toShipmentDTO(shipmentRepository.save(shipmentMapper.toShipment(existingShipment,dto.getSenderId(),dto.getRecipientId(),dto.getPickupPointId(),dto.getOrderId())));
     }
 
     @Override

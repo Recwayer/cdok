@@ -6,9 +6,11 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.experimental.SuperBuilder;
 
+import java.time.ZonedDateTime;
 import java.util.List;
-
+@SuperBuilder
 @Entity
 @Table(name = "pickup_points")
 public class PickupPoint extends BaseEntity {
@@ -24,6 +26,15 @@ public class PickupPoint extends BaseEntity {
 
     @OneToMany(mappedBy = "pickupPoint", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private List<Shipment> availableShipments;
+
+    public PickupPoint(Long id, ZonedDateTime created_date, ZonedDateTime updated_date, String name, Address address, String workingHours, int capacity, List<Shipment> availableShipments) {
+        super(id, created_date, updated_date);
+        this.name = name;
+        this.address = address;
+        this.workingHours = workingHours;
+        this.capacity = capacity;
+        this.availableShipments = availableShipments;
+    }
 
     public PickupPoint(String name, Address address, String workingHours, int capacity, List<Shipment> availableShipments) {
         this.name = name;

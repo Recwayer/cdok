@@ -15,12 +15,12 @@ public class SaveShipmentDTO {
     private String trackingNumber;
     private ShipmentStatus status;
     private double weight;
-    private UserDTO sender;
-    private UserDTO recipient;
-    private PickupPointDTO pickupPoint;
+    private Long senderId;
+    private Long recipientId;
+    private Long pickupPointId;
     private String deliveryAddress;
     private LocalDate shipmentDate;
     private LocalDate estimatedDeliveryDate;
     private DeliveryType deliveryType;
-    private OrderDTO order;
+    private Long orderId;
 }

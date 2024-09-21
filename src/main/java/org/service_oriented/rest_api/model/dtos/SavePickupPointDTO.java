@@ -14,5 +14,5 @@ public class SavePickupPointDTO {
     private AddressDTO address;
     private String workingHours;
     private int capacity;
-    private List<ShipmentDTO> availableShipments;
+    private List<Long> availableShipmentsIds;
 }

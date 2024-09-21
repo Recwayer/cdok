@@ -1,16 +1,14 @@
 package org.service_oriented.rest_api.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.experimental.SuperBuilder;
 import org.service_oriented.rest_api.model.enums.DeliveryType;
 import org.service_oriented.rest_api.model.enums.ShipmentStatus;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
+@SuperBuilder
 @Entity
 @Table(name = "shipments")
 public class Shipment extends BaseEntity {
@@ -23,13 +21,13 @@ public class Shipment extends BaseEntity {
 
     private double weight;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User sender;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User recipient;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private PickupPoint pickupPoint;
 
     private String deliveryAddress;
@@ -41,9 +39,23 @@ public class Shipment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryType;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Order order;
 
+    public Shipment(Long id, ZonedDateTime created_date, ZonedDateTime updated_date, String trackingNumber, ShipmentStatus status, double weight, User sender, User recipient, PickupPoint pickupPoint, String deliveryAddress, LocalDate shipmentDate, LocalDate estimatedDeliveryDate, DeliveryType deliveryType, Order order) {
+        super(id, created_date, updated_date);
+        this.trackingNumber = trackingNumber;
+        this.status = status;
+        this.weight = weight;
+        this.sender = sender;
+        this.recipient = recipient;
+        this.pickupPoint = pickupPoint;
+        this.deliveryAddress = deliveryAddress;
+        this.shipmentDate = shipmentDate;
+        this.estimatedDeliveryDate = estimatedDeliveryDate;
+        this.deliveryType = deliveryType;
+        this.order = order;
+    }
 
     public Shipment(String trackingNumber, ShipmentStatus status, double weight, User sender, User recipient, PickupPoint pickupPoint, String deliveryAddress, LocalDate shipmentDate, LocalDate estimatedDeliveryDate, DeliveryType deliveryType, Order order) {
         this.trackingNumber = trackingNumber;

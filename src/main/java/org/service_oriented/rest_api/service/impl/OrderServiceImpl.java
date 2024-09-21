@@ -1,7 +1,7 @@
 package org.service_oriented.rest_api.service.impl;
 
 import org.service_oriented.rest_api.mapper.OrderMapper;
-import org.service_oriented.rest_api.model.Order;
+import org.service_oriented.rest_api.model.Shipment;
 import org.service_oriented.rest_api.model.dtos.OrderDTO;
 import org.service_oriented.rest_api.model.dtos.SaveOrderDTO;
 import org.service_oriented.rest_api.model.dtos.UpdateOrderDTO;
@@ -56,12 +56,11 @@ public class OrderServiceImpl implements OrderService {
         OrderDTO existingOrder = getOrder(id);
 
         Optional.ofNullable(dto.getOrderNumber()).ifPresent(existingOrder::setOrderNumber);
-        Optional.ofNullable(dto.getShipments()).ifPresent(existingOrder::setShipments);
         Optional.ofNullable(dto.getOrderDate()).ifPresent(existingOrder::setOrderDate);
         Optional.ofNullable(dto.getTotalCost()).filter(cost -> cost >= 0).ifPresent(existingOrder::setTotalCost);
         Optional.ofNullable(dto.getStatus()).ifPresent(existingOrder::setStatus);
 
-        return orderMapper.toOrderDto(orderRepository.save(orderMapper.toOrder(existingOrder)));
+        return orderMapper.toOrderDto(orderRepository.save(orderMapper.toOrder(existingOrder, dto.getShipmentsIds())));
     }
 
     @Override
