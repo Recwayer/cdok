@@ -1,5 +1,6 @@
 package org.service_oriented.rest_api.controller;
 
+import jakarta.validation.Valid;
 import org.service_oriented.rest_api.model.dtos.OrderDTO;
 import org.service_oriented.rest_api.model.dtos.SaveOrderDTO;
 import org.service_oriented.rest_api.model.dtos.UpdateOrderDTO;
@@ -78,14 +79,14 @@ public class OrderController {
     }
 
     @PostMapping
-    public EntityModel<OrderDTO> createOrder(@RequestBody SaveOrderDTO orderDTO) {
+    public EntityModel<OrderDTO> createOrder(@Valid @RequestBody SaveOrderDTO orderDTO) {
         OrderDTO createdOrder = orderService.saveOrder(orderDTO);
         return EntityModel.of(createdOrder,
                 linkTo(methodOn(OrderController.class).getOrderById(createdOrder.getId())).withSelfRel());
     }
 
     @PatchMapping("/{id}")
-    public EntityModel<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody UpdateOrderDTO orderDTO) {
+    public EntityModel<OrderDTO> updateOrder(@PathVariable Long id, @Valid @RequestBody UpdateOrderDTO orderDTO) {
         OrderDTO updatedOrder = orderService.updateOrder(id, orderDTO);
         return EntityModel.of(updatedOrder,
                 linkTo(methodOn(OrderController.class).getOrderById(updatedOrder.getId())).withSelfRel());

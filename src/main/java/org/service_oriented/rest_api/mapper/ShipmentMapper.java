@@ -16,45 +16,11 @@ public abstract class ShipmentMapper {
 
     public abstract ShipmentDTO toShipmentDTO(Shipment shipment);
 
-    public abstract Shipment toShipment(ShipmentDTO shipmentDTO);
-
-    @Mapping(target = "sender", expression = "java(getSender(shipmentDTO.getSenderId()))")
-    @Mapping(target = "recipient", expression = "java(getRecipient(shipmentDTO.getRecipientId()))")
-    @Mapping(target = "pickupPoint", expression = "java(getPickupPoint(shipmentDTO.getPickupPointId()))")
-    @Mapping(target = "order", expression = "java(getOrder(shipmentDTO.getOrderId()))")
-    public abstract Shipment toShipment(SaveShipmentDTO shipmentDTO);
-
-    @Mapping(target = "sender", expression = "java(getSender(senderId))")
-    @Mapping(target = "recipient", expression = "java(getRecipient(recipientId))")
-    @Mapping(target = "pickupPoint", expression = "java(getPickupPoint(pickupPointId))")
-    @Mapping(target = "order", expression = "java(getOrder(orderId))")
-    public abstract Shipment toShipment(ShipmentDTO shipmentDTO, Long senderId, Long recipientId, Long pickupPointId, Long orderId);
-
-    public User getSender(Long id) {
-        if (id == null) {
-            return null;
-        }
-        return User.builder().id(id).build();
-    }
-
-    public User getRecipient(Long id) {
-        if (id == null) {
-            return null;
-        }
-        return User.builder().id(id).build();
-    }
-
-    public PickupPoint getPickupPoint(Long id) {
-        if (id == null) {
-            return null;
-        }
-        return PickupPoint.builder().id(id).build();
-    }
-
-    public Order getOrder(Long id) {
-        if (id == null) {
-            return null;
-        }
-        return Order.builder().id(id).build();
-    }
+    @Mapping(target = "sender", source = "sender")
+    @Mapping(target = "recipient", source = "recipient")
+    @Mapping(target = "pickupPoint", source = "pickupPoint")
+    @Mapping(target = "order", source = "order")
+    @Mapping(target = "status", source = "dto.status")
+    @Mapping(target = "id", ignore = true)
+    public abstract Shipment toShipment(SaveShipmentDTO dto,Order order,PickupPoint pickupPoint,User sender,User recipient);
 }

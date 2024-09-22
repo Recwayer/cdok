@@ -1,5 +1,6 @@
 package org.service_oriented.rest_api.controller;
 
+import jakarta.validation.Valid;
 import org.service_oriented.rest_api.model.dtos.SaveUserDTO;
 import org.service_oriented.rest_api.model.dtos.UpdateUserDTO;
 import org.service_oriented.rest_api.model.dtos.UserDTO;
@@ -78,14 +79,14 @@ public class UserController {
     }
 
     @PostMapping
-    public EntityModel<UserDTO> createUser(@RequestBody SaveUserDTO userDTO) {
+    public EntityModel<UserDTO> createUser(@Valid @RequestBody SaveUserDTO userDTO) {
         UserDTO createdUser = userService.saveUser(userDTO);
         return EntityModel.of(createdUser,
                 linkTo(methodOn(UserController.class).getUserById(createdUser.getId())).withSelfRel());
     }
 
     @PatchMapping("/{id}")
-    public EntityModel<UserDTO> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO userDTO) {
+    public EntityModel<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return EntityModel.of(updatedUser,
                 linkTo(methodOn(UserController.class).getUserById(updatedUser.getId())).withSelfRel());

@@ -8,6 +8,7 @@ import org.service_oriented.rest_api.model.Order;
 import org.service_oriented.rest_api.model.Shipment;
 import org.service_oriented.rest_api.model.dtos.OrderDTO;
 import org.service_oriented.rest_api.model.dtos.SaveOrderDTO;
+import org.service_oriented.rest_api.model.dtos.ShipmentDTO;
 import org.service_oriented.rest_api.model.dtos.UpdateOrderDTO;
 
 import java.util.List;
@@ -17,18 +18,6 @@ import java.util.List;
 public abstract class OrderMapper {
     public abstract OrderDTO toOrderDto(Order order);
 
-    @Mapping(target = "shipments", expression = "java(getShipmentsFromIds(orderDTO.getShipmentsIds()))")
-    public abstract Order toOrder(SaveOrderDTO orderDTO);
 
-    @Mapping(target = "shipments", expression = "java(getShipmentsFromIds(shipmentIds))")
-    public abstract Order toOrder(OrderDTO orderDTO, List<Long> shipmentIds);
-
-    public List<Shipment> getShipmentsFromIds(List<Long> shipmentIds){
-        if(shipmentIds == null){
-            return null;
-        }
-        return shipmentIds.stream()
-                .map(id -> (Shipment) Shipment.builder().id(id).build())
-                .toList();
-    }
+    public abstract Order toOrder(SaveOrderDTO orderDTO, List<Shipment> shipments);
 }

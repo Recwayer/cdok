@@ -1,5 +1,6 @@
 package org.service_oriented.rest_api.controller;
 
+import jakarta.validation.Valid;
 import org.service_oriented.rest_api.model.dtos.PickupPointDTO;
 import org.service_oriented.rest_api.model.dtos.SavePickupPointDTO;
 import org.service_oriented.rest_api.model.dtos.UpdatePickupPointDTO;
@@ -78,14 +79,14 @@ public class PickupPointController {
     }
 
     @PostMapping
-    public EntityModel<PickupPointDTO> createPickupPoint(@RequestBody SavePickupPointDTO pickupPointDTO) {
+    public EntityModel<PickupPointDTO> createPickupPoint(@Valid @RequestBody SavePickupPointDTO pickupPointDTO) {
         PickupPointDTO createdPickupPoint = pickupPointService.savePickupPoint(pickupPointDTO);
         return EntityModel.of(createdPickupPoint,
                 linkTo(methodOn(PickupPointController.class).getPickupPointById(createdPickupPoint.getId())).withSelfRel());
     }
 
     @PatchMapping("/{id}")
-    public EntityModel<PickupPointDTO> updatePickupPoint(@PathVariable Long id, @RequestBody UpdatePickupPointDTO pickupPointDTO) {
+    public EntityModel<PickupPointDTO> updatePickupPoint(@PathVariable Long id, @Valid @RequestBody UpdatePickupPointDTO pickupPointDTO) {
         PickupPointDTO updatedPickupPoint = pickupPointService.updatePickupPoint(id, pickupPointDTO);
         return EntityModel.of(updatedPickupPoint,
                 linkTo(methodOn(PickupPointController.class).getPickupPointById(updatedPickupPoint.getId())).withSelfRel());

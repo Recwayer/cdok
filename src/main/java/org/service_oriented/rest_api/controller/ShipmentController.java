@@ -1,5 +1,6 @@
 package org.service_oriented.rest_api.controller;
 
+import jakarta.validation.Valid;
 import org.service_oriented.rest_api.model.dtos.SaveShipmentDTO;
 import org.service_oriented.rest_api.model.dtos.ShipmentDTO;
 import org.service_oriented.rest_api.model.dtos.UpdateShipmentDTO;
@@ -78,14 +79,14 @@ public class ShipmentController {
     }
 
     @PostMapping
-    public EntityModel<ShipmentDTO> createShipment(@RequestBody SaveShipmentDTO shipmentDTO) {
+    public EntityModel<ShipmentDTO> createShipment(@Valid @RequestBody SaveShipmentDTO shipmentDTO) {
         ShipmentDTO createdShipment = shipmentService.saveShipment(shipmentDTO);
         return EntityModel.of(createdShipment,
                 linkTo(methodOn(ShipmentController.class).getShipmentById(createdShipment.getId())).withSelfRel());
     }
 
     @PatchMapping("/{id}")
-    public EntityModel<ShipmentDTO> updateShipment(@PathVariable Long id, @RequestBody UpdateShipmentDTO shipmentDTO) {
+    public EntityModel<ShipmentDTO> updateShipment(@PathVariable Long id, @Valid @RequestBody UpdateShipmentDTO shipmentDTO) {
         ShipmentDTO updatedShipment = shipmentService.updateShipment(id, shipmentDTO);
         return EntityModel.of(updatedShipment,
                 linkTo(methodOn(ShipmentController.class).getShipmentById(updatedShipment.getId())).withSelfRel());
