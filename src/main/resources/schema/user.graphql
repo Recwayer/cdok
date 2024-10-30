@@ -1,0 +1,52 @@
+type AddressDTO {
+    street: String
+    city: String
+    postalCode: String
+    country: String
+}
+
+input AddressDTOInput {
+    street: String
+    city: String
+    postalCode: String
+    country: String
+}
+
+enum UserRole {
+    SENDER
+    RECIPIENT
+    ADMIN
+}
+
+type UserDTO {
+    id: ID
+    name: String
+    email: String
+    phone: String
+    address: AddressDTO
+    role: UserRole
+}
+
+input SaveUserDTO {
+    name: String!
+    email: String!
+    phone: String!
+    address: AddressDTOInput
+    role: UserRole!
+}
+
+input UpdateUserDTO {
+    name: String
+    email: String
+    phone: String
+    address: AddressDTOInput
+    role: UserRole
+}
+
+type UserPage {
+    content: [UserDTO]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
+}

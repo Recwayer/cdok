@@ -1,0 +1,32 @@
+type PickupPointDTO {
+    id: ID
+    name: String
+    address: AddressDTO
+    workingHours: String
+    capacity: Int
+    availableShipments: [ShipmentDTO]
+}
+
+type PickupPointPage {
+    content: [PickupPointDTO]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
+}
+
+input SavePickupPointDTO {
+    name: String!
+    address: AddressDTOInput!
+    workingHours: String!
+    capacity: Int!
+    availableShipmentsIds: [ID]
+}
+
+input UpdatePickupPointDTO {
+    name: String
+    address: AddressDTOInput
+    workingHours: String
+    capacity: Int
+    availableShipmentsIds: [ID]
+}

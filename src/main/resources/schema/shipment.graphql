@@ -1,0 +1,60 @@
+type ShipmentDTO {
+    id: ID
+    trackingNumber: String
+    status: ShipmentStatus
+    weight: Float
+    sender: UserDTO
+    recipient: UserDTO
+    deliveryAddress: String
+    shipmentDate: String
+    estimatedDeliveryDate: String
+    deliveryType: DeliveryType
+}
+
+enum ShipmentStatus {
+    PENDING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+}
+
+enum DeliveryType {
+    STANDARD
+    EXPRESS
+}
+
+type ShipmentPage {
+    content: [ShipmentDTO]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
+}
+
+input SaveShipmentDTO {
+    trackingNumber: String!
+    status: ShipmentStatus!
+    weight: Float!
+    senderId: ID!
+    recipientId: ID!
+    pickupPointId: ID
+    deliveryAddress: String
+    shipmentDate: String
+    estimatedDeliveryDate: String
+    deliveryType: DeliveryType!
+    orderId: ID
+}
+
+input UpdateShipmentDTO {
+    trackingNumber: String
+    status: ShipmentStatus
+    weight: Float
+    senderId: ID
+    recipientId: ID
+    pickupPointId: ID
+    deliveryAddress: String
+    shipmentDate: String
+    estimatedDeliveryDate: String
+    deliveryType: DeliveryType
+    orderId: ID
+}
