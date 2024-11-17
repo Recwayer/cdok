@@ -1,11 +1,13 @@
 package org.service_oriented.rest_api.service.impl;
 
+import org.service_oriented.dto.OrderDTO;
+import org.service_oriented.dto.SaveOrderDTO;
+import org.service_oriented.dto.UpdateOrderDTO;
+import org.service_oriented.exceptions.CustomExceptions;
 import org.service_oriented.rest_api.mapper.OrderMapper;
 import org.service_oriented.rest_api.model.Order;
 import org.service_oriented.rest_api.model.Shipment;
-import org.service_oriented.rest_api.model.dtos.OrderDTO;
-import org.service_oriented.rest_api.model.dtos.SaveOrderDTO;
-import org.service_oriented.rest_api.model.dtos.UpdateOrderDTO;
+import org.service_oriented.rest_api.model.enums.OrderStatus;
 import org.service_oriented.rest_api.repository.OrderRepository;
 import org.service_oriented.rest_api.repository.ShipmentRepository;
 import org.service_oriented.rest_api.service.OrderService;
@@ -56,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO saveOrder(SaveOrderDTO dto) {
-        List<Shipment> shipments = Optional.ofNullable(dto.getShipmentsIds()).map(shipmentRepository::findAllById).orElse(List.of());
+        List<Shipment> shipments = Optional.ofNullable(dto.shipmentsIds()).map(shipmentRepository::findAllById).orElse(List.of());
         Order order = orderMapper.toOrder(dto,shipments);
         shipments.forEach(shipment -> shipment.setOrder(order));
         return orderMapper.toOrderDto(orderRepository.save(order));
@@ -67,11 +69,11 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO updateOrder(Long id, UpdateOrderDTO dto) {
         Order existingOrder =  findOrderById(id);
 
-        Optional.ofNullable(dto.getOrderNumber()).ifPresent(existingOrder::setOrderNumber);
-        Optional.ofNullable(dto.getOrderDate()).ifPresent(existingOrder::setOrderDate);
-        Optional.ofNullable(dto.getTotalCost()).filter(cost -> cost >= 0).ifPresent(existingOrder::setTotalCost);
-        Optional.ofNullable(dto.getStatus()).ifPresent(existingOrder::setStatus);
-        List<Shipment> shipments = Optional.ofNullable(dto.getShipmentsIds()).map(shipmentRepository::findAllById).orElse(existingOrder.getShipments());
+        Optional.ofNullable(dto.orderNumber()).ifPresent(existingOrder::setOrderNumber);
+        Optional.ofNullable(dto.orderDate()).ifPresent(existingOrder::setOrderDate);
+        Optional.ofNullable(dto.totalCost()).filter(cost -> cost >= 0).ifPresent(existingOrder::setTotalCost);
+        Optional.ofNullable(dto.status()).ifPresent(status -> existingOrder.setStatus(OrderStatus.valueOf(status.name())));
+        List<Shipment> shipments = Optional.ofNullable(dto.shipmentsIds()).map(shipmentRepository::findAllById).orElse(existingOrder.getShipments());
         existingOrder.setShipments(shipments);
         shipments.forEach(shipment -> shipment.setOrder(existingOrder));
         return orderMapper.toOrderDto(orderRepository.save(existingOrder));
@@ -83,13 +85,13 @@ public class OrderServiceImpl implements OrderService {
         if (orderRepository.existsById(id)) {
             orderRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Order not found with id: " + id);
+            throw new CustomExceptions.OrderNotFoundException("Order not found with id: " + id);
         }
     }
 
     private Order findOrderById(Long id){
        return  orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + id));
+                .orElseThrow(() -> new CustomExceptions.OrderNotFoundException("Order not found with id: " + id));
     }
 
 

@@ -1,16 +1,16 @@
 package org.service_oriented.rest_api.controller;
 
 import jakarta.validation.Valid;
-import org.service_oriented.rest_api.model.dtos.PickupPointDTO;
-import org.service_oriented.rest_api.model.dtos.SavePickupPointDTO;
-import org.service_oriented.rest_api.model.dtos.UpdatePickupPointDTO;
+import org.service_oriented.controllers.PickupPointApi;
+import org.service_oriented.dto.PickupPointDTO;
+import org.service_oriented.dto.SavePickupPointDTO;
+import org.service_oriented.dto.UpdatePickupPointDTO;
 import org.service_oriented.rest_api.service.PickupPointService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -24,7 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/pickup-point")
-public class PickupPointController {
+public class PickupPointController implements PickupPointApi {
     private PickupPointService pickupPointService;
 
     public PickupPointController(PickupPointService pickupPointService) {
@@ -44,7 +44,7 @@ public class PickupPointController {
 
         List<EntityModel<PickupPointDTO>> pickupPointModels = pickupPoints.stream()
                 .map(point -> EntityModel.of(point,
-                        linkTo(methodOn(PickupPointController.class).getPickupPointById(point.getId())).withSelfRel()))
+                        linkTo(methodOn(PickupPointController.class).getPickupPointById(point.id())).withSelfRel()))
                 .collect(Collectors.toList());
 
         PagedModel<EntityModel<PickupPointDTO>> pagedModel = PagedModel.of(pickupPointModels,
@@ -82,14 +82,14 @@ public class PickupPointController {
     public EntityModel<PickupPointDTO> createPickupPoint(@Valid @RequestBody SavePickupPointDTO pickupPointDTO) {
         PickupPointDTO createdPickupPoint = pickupPointService.savePickupPoint(pickupPointDTO);
         return EntityModel.of(createdPickupPoint,
-                linkTo(methodOn(PickupPointController.class).getPickupPointById(createdPickupPoint.getId())).withSelfRel());
+                linkTo(methodOn(PickupPointController.class).getPickupPointById(createdPickupPoint.id())).withSelfRel());
     }
 
     @PatchMapping("/{id}")
     public EntityModel<PickupPointDTO> updatePickupPoint(@PathVariable Long id, @Valid @RequestBody UpdatePickupPointDTO pickupPointDTO) {
         PickupPointDTO updatedPickupPoint = pickupPointService.updatePickupPoint(id, pickupPointDTO);
         return EntityModel.of(updatedPickupPoint,
-                linkTo(methodOn(PickupPointController.class).getPickupPointById(updatedPickupPoint.getId())).withSelfRel());
+                linkTo(methodOn(PickupPointController.class).getPickupPointById(updatedPickupPoint.id())).withSelfRel());
     }
 
     @DeleteMapping("/{id}")

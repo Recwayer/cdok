@@ -21,13 +21,13 @@ public class Shipment extends BaseEntity {
 
     private double weight;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private User sender;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private User recipient;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private PickupPoint pickupPoint;
 
     private String deliveryAddress;
@@ -39,7 +39,7 @@ public class Shipment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryType;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private Order order;
 
     public Shipment(Long id, ZonedDateTime created_date, ZonedDateTime updated_date, String trackingNumber, ShipmentStatus status, double weight, User sender, User recipient, PickupPoint pickupPoint, String deliveryAddress, LocalDate shipmentDate, LocalDate estimatedDeliveryDate, DeliveryType deliveryType, Order order) {

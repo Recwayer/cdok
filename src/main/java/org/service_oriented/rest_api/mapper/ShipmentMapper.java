@@ -4,11 +4,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
+import org.service_oriented.dto.SaveShipmentDTO;
+import org.service_oriented.dto.ShipmentDTO;
 import org.service_oriented.rest_api.model.Order;
 import org.service_oriented.rest_api.model.PickupPoint;
 import org.service_oriented.rest_api.model.Shipment;
 import org.service_oriented.rest_api.model.User;
-import org.service_oriented.rest_api.model.dtos.*;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -22,5 +23,5 @@ public abstract class ShipmentMapper {
     @Mapping(target = "order", source = "order")
     @Mapping(target = "status", source = "dto.status")
     @Mapping(target = "id", ignore = true)
-    public abstract Shipment toShipment(SaveShipmentDTO dto,Order order,PickupPoint pickupPoint,User sender,User recipient);
+    public abstract Shipment toShipment(SaveShipmentDTO dto, Order order, PickupPoint pickupPoint, User sender, User recipient);
 }

@@ -1,9 +1,8 @@
 package org.service_oriented.rest_api.service;
 
-import org.service_oriented.rest_api.model.Order;
-import org.service_oriented.rest_api.model.dtos.OrderDTO;
-import org.service_oriented.rest_api.model.dtos.SaveOrderDTO;
-import org.service_oriented.rest_api.model.dtos.UpdateOrderDTO;
+import org.service_oriented.dto.OrderDTO;
+import org.service_oriented.dto.SaveOrderDTO;
+import org.service_oriented.dto.UpdateOrderDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

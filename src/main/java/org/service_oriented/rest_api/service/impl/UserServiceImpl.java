@@ -1,10 +1,12 @@
 package org.service_oriented.rest_api.service.impl;
 
+import org.service_oriented.dto.SaveUserDTO;
+import org.service_oriented.dto.UpdateUserDTO;
+import org.service_oriented.dto.UserDTO;
+import org.service_oriented.exceptions.CustomExceptions;
 import org.service_oriented.rest_api.mapper.UserMapper;
 import org.service_oriented.rest_api.model.User;
-import org.service_oriented.rest_api.model.dtos.SaveUserDTO;
-import org.service_oriented.rest_api.model.dtos.UpdateUserDTO;
-import org.service_oriented.rest_api.model.dtos.UserDTO;
+import org.service_oriented.rest_api.model.enums.UserRole;
 import org.service_oriented.rest_api.repository.UserRepository;
 import org.service_oriented.rest_api.service.UserService;
 import org.springframework.data.domain.Page;
@@ -40,8 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUser(Long id) {
-        return userMapper.toUserDto(userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id)));
+        return userMapper.toUserDto(findUserById(id));
     }
 
     @Override
@@ -53,15 +54,15 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDTO updateUser(Long id, UpdateUserDTO dto) {
-        UserDTO existingUser = getUser(id);
+        User existingUser = findUserById(id);
 
-        Optional.ofNullable(dto.getName()).ifPresent(existingUser::setName);
-        Optional.ofNullable(dto.getEmail()).ifPresent(existingUser::setEmail);
-        Optional.ofNullable(dto.getPhone()).ifPresent(existingUser::setPhone);
-        Optional.ofNullable(dto.getAddress()).ifPresent(existingUser::setAddress);
-        Optional.ofNullable(dto.getRole()).ifPresent(existingUser::setRole);
+        Optional.ofNullable(dto.name()).ifPresent(existingUser::setName);
+        Optional.ofNullable(dto.email()).ifPresent(existingUser::setEmail);
+        Optional.ofNullable(dto.phone()).ifPresent(existingUser::setPhone);
+        Optional.ofNullable(dto.address()).ifPresent(addressDto -> existingUser.setAddress(userMapper.mapAddressDTOToAddress(addressDto)));
+        Optional.ofNullable(dto.role()).ifPresent(userRole -> existingUser.setRole(UserRole.valueOf(userRole.name())));
 
-        return userMapper.toUserDto(userRepository.save(userMapper.toUser(existingUser)));
+        return userMapper.toUserDto(userRepository.save(existingUser));
     }
 
     @Override
@@ -70,8 +71,13 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("User not found with id: " + id);
+            throw new CustomExceptions.UserNotFoundException("User not found with id: " + id);
         }
+    }
+
+    private User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomExceptions.UserNotFoundException("User not found with id: " + id));
     }
 
 
