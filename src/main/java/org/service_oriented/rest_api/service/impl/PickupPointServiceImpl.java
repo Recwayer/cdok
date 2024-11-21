@@ -1,11 +1,12 @@
 package org.service_oriented.rest_api.service.impl;
 
+import org.service_oriented.dto.PickupPointDTO;
+import org.service_oriented.dto.SavePickupPointDTO;
+import org.service_oriented.dto.UpdatePickupPointDTO;
+import org.service_oriented.exceptions.CustomExceptions;
 import org.service_oriented.rest_api.mapper.PickupPointMapper;
 import org.service_oriented.rest_api.model.PickupPoint;
 import org.service_oriented.rest_api.model.Shipment;
-import org.service_oriented.rest_api.model.dtos.PickupPointDTO;
-import org.service_oriented.rest_api.model.dtos.SavePickupPointDTO;
-import org.service_oriented.rest_api.model.dtos.UpdatePickupPointDTO;
 import org.service_oriented.rest_api.repository.PickupPointRepository;
 import org.service_oriented.rest_api.repository.ShipmentRepository;
 import org.service_oriented.rest_api.service.PickupPointService;
@@ -56,7 +57,7 @@ public class PickupPointServiceImpl implements PickupPointService {
     @Override
     @Transactional
     public PickupPointDTO savePickupPoint(SavePickupPointDTO dto) {
-        List<Shipment> shipments = Optional.ofNullable(dto.getAvailableShipmentsIds()).map(shipmentRepository::findAllById).orElse(List.of());
+        List<Shipment> shipments = Optional.ofNullable(dto.availableShipmentsIds()).map(shipmentRepository::findAllById).orElse(List.of());
         PickupPoint pickupPoint = pickupPointMapper.toPickupPoint(dto, shipments);
         shipments.forEach(shipment -> shipment.setPickupPoint(pickupPoint));
         return pickupPointMapper.toPickupPointDTO(pickupPointRepository.save(pickupPoint));
@@ -67,11 +68,11 @@ public class PickupPointServiceImpl implements PickupPointService {
     public PickupPointDTO updatePickupPoint(Long id, UpdatePickupPointDTO dto) {
         PickupPoint existingPickupPoint = findPickupPointById(id);
 
-        Optional.ofNullable(dto.getName()).ifPresent(existingPickupPoint::setName);
-        Optional.ofNullable(dto.getAddress()).ifPresent(a -> existingPickupPoint.setAddress(pickupPointMapper.mapAddressDTOToAddress(a)));
-        Optional.ofNullable(dto.getWorkingHours()).ifPresent(existingPickupPoint::setWorkingHours);
-        Optional.ofNullable(dto.getCapacity()).filter(capacity -> capacity > 0).ifPresent(existingPickupPoint::setCapacity);
-        List<Shipment> shipments = Optional.ofNullable(dto.getAvailableShipmentsIds()).map(shipmentRepository::findAllById).orElse(existingPickupPoint.getAvailableShipments());
+        Optional.ofNullable(dto.name()).ifPresent(existingPickupPoint::setName);
+        Optional.ofNullable(dto.address()).ifPresent(a -> existingPickupPoint.setAddress(pickupPointMapper.mapAddressDTOToAddress(a)));
+        Optional.ofNullable(dto.workingHours()).ifPresent(existingPickupPoint::setWorkingHours);
+        Optional.ofNullable(dto.capacity()).filter(capacity -> capacity > 0).ifPresent(existingPickupPoint::setCapacity);
+        List<Shipment> shipments = Optional.ofNullable(dto.availableShipmentsIds()).map(shipmentRepository::findAllById).orElse(existingPickupPoint.getAvailableShipments());
         existingPickupPoint.setAvailableShipments(shipments);
         shipments.forEach(shipment -> shipment.setPickupPoint(existingPickupPoint));
         return pickupPointMapper.toPickupPointDTO(pickupPointRepository.save(existingPickupPoint));
@@ -83,13 +84,13 @@ public class PickupPointServiceImpl implements PickupPointService {
         if (pickupPointRepository.existsById(id)) {
             pickupPointRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("PickupPoint not found with id: " + id);
+            throw new CustomExceptions.PickupPointNotFoundException("PickupPoint not found with id: " + id);
         }
     }
 
     private PickupPoint findPickupPointById(Long id) {
         return pickupPointRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("PickupPoint not found with id: " + id));
+                .orElseThrow(() -> new CustomExceptions.PickupPointNotFoundException("PickupPoint not found with id: " + id));
     }
 
 

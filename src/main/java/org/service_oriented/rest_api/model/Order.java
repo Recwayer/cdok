@@ -13,7 +13,7 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private String orderNumber;
 
-    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private List<Shipment> shipments;
 
     private LocalDate orderDate;

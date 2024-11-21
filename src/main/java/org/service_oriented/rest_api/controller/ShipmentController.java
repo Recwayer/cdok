@@ -1,16 +1,16 @@
 package org.service_oriented.rest_api.controller;
 
 import jakarta.validation.Valid;
-import org.service_oriented.rest_api.model.dtos.SaveShipmentDTO;
-import org.service_oriented.rest_api.model.dtos.ShipmentDTO;
-import org.service_oriented.rest_api.model.dtos.UpdateShipmentDTO;
+import org.service_oriented.controllers.ShipmentApi;
+import org.service_oriented.dto.SaveShipmentDTO;
+import org.service_oriented.dto.ShipmentDTO;
+import org.service_oriented.dto.UpdateShipmentDTO;
 import org.service_oriented.rest_api.service.ShipmentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -24,7 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/shipment")
-public class ShipmentController {
+public class ShipmentController implements ShipmentApi {
     private ShipmentService shipmentService;
 
     public ShipmentController(ShipmentService shipmentService) {
@@ -44,7 +44,7 @@ public class ShipmentController {
 
         List<EntityModel<ShipmentDTO>> shipmentModels = shipments.stream()
                 .map(shipment -> EntityModel.of(shipment,
-                        linkTo(methodOn(ShipmentController.class).getShipmentById(shipment.getId())).withSelfRel()))
+                        linkTo(methodOn(ShipmentController.class).getShipmentById(shipment.id())).withSelfRel()))
                 .collect(Collectors.toList());
 
         PagedModel<EntityModel<ShipmentDTO>> pagedModel = PagedModel.of(shipmentModels,
@@ -82,14 +82,14 @@ public class ShipmentController {
     public EntityModel<ShipmentDTO> createShipment(@Valid @RequestBody SaveShipmentDTO shipmentDTO) {
         ShipmentDTO createdShipment = shipmentService.saveShipment(shipmentDTO);
         return EntityModel.of(createdShipment,
-                linkTo(methodOn(ShipmentController.class).getShipmentById(createdShipment.getId())).withSelfRel());
+                linkTo(methodOn(ShipmentController.class).getShipmentById(createdShipment.id())).withSelfRel());
     }
 
     @PatchMapping("/{id}")
     public EntityModel<ShipmentDTO> updateShipment(@PathVariable Long id, @Valid @RequestBody UpdateShipmentDTO shipmentDTO) {
         ShipmentDTO updatedShipment = shipmentService.updateShipment(id, shipmentDTO);
         return EntityModel.of(updatedShipment,
-                linkTo(methodOn(ShipmentController.class).getShipmentById(updatedShipment.getId())).withSelfRel());
+                linkTo(methodOn(ShipmentController.class).getShipmentById(updatedShipment.id())).withSelfRel());
     }
 
     @DeleteMapping("/{id}")

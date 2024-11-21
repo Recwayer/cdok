@@ -1,11 +1,6 @@
 package org.service_oriented.rest_api.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.ZonedDateTime;
@@ -24,7 +19,7 @@ public class PickupPoint extends BaseEntity {
 
     private int capacity;
 
-    @OneToMany(mappedBy = "pickupPoint", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "pickupPoint", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private List<Shipment> availableShipments;
 
     public PickupPoint(Long id, ZonedDateTime created_date, ZonedDateTime updated_date, String name, Address address, String workingHours, int capacity, List<Shipment> availableShipments) {

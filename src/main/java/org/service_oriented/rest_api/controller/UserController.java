@@ -1,16 +1,16 @@
 package org.service_oriented.rest_api.controller;
 
 import jakarta.validation.Valid;
-import org.service_oriented.rest_api.model.dtos.SaveUserDTO;
-import org.service_oriented.rest_api.model.dtos.UpdateUserDTO;
-import org.service_oriented.rest_api.model.dtos.UserDTO;
+import org.service_oriented.controllers.UserApi;
+import org.service_oriented.dto.SaveUserDTO;
+import org.service_oriented.dto.UpdateUserDTO;
+import org.service_oriented.dto.UserDTO;
 import org.service_oriented.rest_api.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -24,7 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class UserController implements UserApi {
     private UserService userService;
 
     public UserController(UserService userService) {
@@ -44,7 +44,7 @@ public class UserController {
 
         List<EntityModel<UserDTO>> userModels = users.stream()
                 .map(user -> EntityModel.of(user,
-                        linkTo(methodOn(UserController.class).getUserById(user.getId())).withSelfRel()))
+                        linkTo(methodOn(UserController.class).getUserById(user.id())).withSelfRel()))
                 .collect(Collectors.toList());
 
         PagedModel<EntityModel<UserDTO>> pagedModel = PagedModel.of(userModels,
@@ -82,14 +82,14 @@ public class UserController {
     public EntityModel<UserDTO> createUser(@Valid @RequestBody SaveUserDTO userDTO) {
         UserDTO createdUser = userService.saveUser(userDTO);
         return EntityModel.of(createdUser,
-                linkTo(methodOn(UserController.class).getUserById(createdUser.getId())).withSelfRel());
+                linkTo(methodOn(UserController.class).getUserById(createdUser.id())).withSelfRel());
     }
 
     @PatchMapping("/{id}")
     public EntityModel<UserDTO> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserDTO userDTO) {
         UserDTO updatedUser = userService.updateUser(id, userDTO);
         return EntityModel.of(updatedUser,
-                linkTo(methodOn(UserController.class).getUserById(updatedUser.getId())).withSelfRel());
+                linkTo(methodOn(UserController.class).getUserById(updatedUser.id())).withSelfRel());
     }
 
     @DeleteMapping("/{id}")

@@ -1,13 +1,15 @@
 package org.service_oriented.rest_api.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
+import org.service_oriented.dto.AddressDTO;
+import org.service_oriented.dto.PickupPointDTO;
+import org.service_oriented.dto.SavePickupPointDTO;
 import org.service_oriented.rest_api.model.Address;
 import org.service_oriented.rest_api.model.PickupPoint;
 import org.service_oriented.rest_api.model.Shipment;
-import org.service_oriented.rest_api.model.dtos.*;
+
 
 import java.util.List;
 

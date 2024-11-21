@@ -1,15 +1,12 @@
 package org.service_oriented.rest_api.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
+import org.service_oriented.dto.OrderDTO;
+import org.service_oriented.dto.SaveOrderDTO;
 import org.service_oriented.rest_api.model.Order;
 import org.service_oriented.rest_api.model.Shipment;
-import org.service_oriented.rest_api.model.dtos.OrderDTO;
-import org.service_oriented.rest_api.model.dtos.SaveOrderDTO;
-import org.service_oriented.rest_api.model.dtos.ShipmentDTO;
-import org.service_oriented.rest_api.model.dtos.UpdateOrderDTO;
 
 import java.util.List;
 
