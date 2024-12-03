@@ -1,6 +1,12 @@
 server:
   port: 8081
 spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: vhost
+    username: guest
+    password: guest
   datasource:
     url: jdbc:postgresql://localhost:5432/cdok
     username: admin
@@ -12,3 +18,6 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui
+app:
+  rabbitmq:
+    queue: "firstQueue"

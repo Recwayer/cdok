@@ -4,7 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'org.service_oriented'
+group = 'org.service.oriented'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -33,6 +33,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     implementation files('C:\\Users\\karpu\\IdeaProjects\\main-servicecf\\build\\libs\\main-servicecf-0.0.1-contracts.jar')
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
 }
 
 tasks.named('test') {
