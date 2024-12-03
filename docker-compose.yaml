@@ -15,6 +15,23 @@ services:
     networks:
       - postgres_network
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: main-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cdok
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    depends_on:
+      - postgres
+    restart: always
+    networks:
+      - postgres_network
+
 volumes:
   postgres_data:
 
