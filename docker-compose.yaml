@@ -13,7 +13,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - postgres_network
+      - app_network
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app_network
 
   app:
     build:
@@ -36,5 +45,5 @@ volumes:
   postgres_data:
 
 networks:
-  postgres_network:
+  app_network:
     driver: bridge
