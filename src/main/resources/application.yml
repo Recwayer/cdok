@@ -18,6 +18,3 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui
-app:
-  rabbitmq:
-    queue: "firstQueue"

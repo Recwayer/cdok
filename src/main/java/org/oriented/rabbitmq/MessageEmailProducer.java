@@ -10,11 +10,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MessageProducer {
+public class MessageEmailProducer {
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
 
-    public MessageProducer(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
+    public MessageEmailProducer(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
     }
@@ -22,13 +22,13 @@ public class MessageProducer {
     @Async
     public void sendMessage(Object object, EmailAction action) {
         String message = parseMessage(object, action);
-        rabbitTemplate.convertAndSend(RabbitMQConfiguration.QUEUE_NAME, message);
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.EMAIL_QUEUE, message);
     }
 
     @Async
     public void sendMessage(Class<?> entityType, Object object, EmailAction action) {
         String message = parseMessage(entityType, object, action);
-        rabbitTemplate.convertAndSend(RabbitMQConfiguration.QUEUE_NAME, message);
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.EMAIL_QUEUE, message);
     }
 
     private String parseMessage(Object message, EmailAction action) {
