@@ -7,7 +7,7 @@ import org.service_oriented.dto.SaveUserDTO;
 import org.service_oriented.dto.UpdateUserDTO;
 import org.service_oriented.dto.UserDTO;
 import org.service_oriented.exceptions.CustomExceptions;
-import org.oriented.rabbitmq.MessageProducer;
+import org.oriented.rabbitmq.MessageEmailProducer;
 import org.oriented.rest.api.model.enums.UserRole;
 import org.oriented.rest.api.repository.UserRepository;
 import org.service_oriented.rabitmq.model.EmailAction;
@@ -20,13 +20,13 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final MessageProducer messageProducer;
+    private final MessageEmailProducer messageEmailProducer;
     private UserRepository userRepository;
     private UserMapper userMapper;
 
 
-    public UserServiceImpl(MessageProducer messageProducer, UserRepository userRepository, UserMapper userMapper) {
-        this.messageProducer = messageProducer;
+    public UserServiceImpl(MessageEmailProducer messageEmailProducer, UserRepository userRepository, UserMapper userMapper) {
+        this.messageEmailProducer = messageEmailProducer;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO saveUser(SaveUserDTO dto) {
         UserDTO userDTO = userMapper.toUserDto(userRepository.save(userMapper.toUser(dto)));
-        messageProducer.sendMessage(userDTO, EmailAction.NEW);
+        messageEmailProducer.sendMessage(userDTO, EmailAction.NEW);
         return userDTO;
     }
 
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
         Optional.ofNullable(dto.role()).ifPresent(userRole -> existingUser.setRole(UserRole.valueOf(userRole.name())));
 
         UserDTO userDTO = userMapper.toUserDto(userRepository.save(existingUser));
-        messageProducer.sendMessage(userDTO, EmailAction.UPDATE);
+        messageEmailProducer.sendMessage(userDTO, EmailAction.UPDATE);
         return userDTO;
     }
 

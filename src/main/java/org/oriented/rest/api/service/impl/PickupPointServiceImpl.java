@@ -1,5 +1,6 @@
 package org.oriented.rest.api.service.impl;
 
+import org.oriented.rabbitmq.MessageWebProducer;
 import org.oriented.rest.api.mapper.PickupPointMapper;
 import org.oriented.rest.api.model.PickupPoint;
 import org.oriented.rest.api.model.Shipment;
@@ -26,10 +27,13 @@ public class PickupPointServiceImpl implements PickupPointService {
 
     private ShipmentRepository shipmentRepository;
 
-    public PickupPointServiceImpl(PickupPointRepository pickupPointRepository, PickupPointMapper pickupPointMapper, ShipmentRepository shipmentRepository) {
+    private final MessageWebProducer messageWebProducer;
+
+    public PickupPointServiceImpl(PickupPointRepository pickupPointRepository, PickupPointMapper pickupPointMapper, ShipmentRepository shipmentRepository, MessageWebProducer messageWebProducer) {
         this.pickupPointRepository = pickupPointRepository;
         this.pickupPointMapper = pickupPointMapper;
         this.shipmentRepository = shipmentRepository;
+        this.messageWebProducer = messageWebProducer;
     }
 
     public void setPickupPointRepository(PickupPointRepository pickupPointRepository) {
@@ -60,7 +64,9 @@ public class PickupPointServiceImpl implements PickupPointService {
         List<Shipment> shipments = Optional.ofNullable(dto.availableShipmentsIds()).map(shipmentRepository::findAllById).orElse(List.of());
         PickupPoint pickupPoint = pickupPointMapper.toPickupPoint(dto, shipments);
         shipments.forEach(shipment -> shipment.setPickupPoint(pickupPoint));
-        return pickupPointMapper.toPickupPointDTO(pickupPointRepository.save(pickupPoint));
+        PickupPointDTO pickupPointDto = pickupPointMapper.toPickupPointDTO(pickupPointRepository.save(pickupPoint));
+        messageWebProducer.sendMessage(pickupPointDto);
+        return pickupPointDto;
     }
 
     @Override
