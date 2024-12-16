@@ -7,7 +7,7 @@ import org.service_oriented.dto.SaveUserDTO;
 import org.service_oriented.dto.UpdateUserDTO;
 import org.service_oriented.dto.UserDTO;
 import org.service_oriented.exceptions.CustomExceptions;
-import org.oriented.rabbitmq.MessageEmailProducer;
+import org.oriented.rabbitmq.producer.MessageEmailProducer;
 import org.oriented.rest.api.model.enums.UserRole;
 import org.oriented.rest.api.repository.UserRepository;
 import org.service_oriented.rabitmq.model.EmailAction;

@@ -1,6 +1,6 @@
 package org.oriented.rest.api.service.impl;
 
-import org.oriented.rabbitmq.MessageWebProducer;
+import org.oriented.rabbitmq.producer.MessageWebProducer;
 import org.oriented.rest.api.mapper.PickupPointMapper;
 import org.oriented.rest.api.model.PickupPoint;
 import org.oriented.rest.api.model.Shipment;

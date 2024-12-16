@@ -1,5 +1,6 @@
 package org.oriented.rest.api.service.impl;
 
+import org.oriented.rabbitmq.producer.MessageCostProducer;
 import org.oriented.rest.api.mapper.OrderMapper;
 import org.oriented.rest.api.model.Order;
 import org.oriented.rest.api.model.Shipment;
@@ -27,10 +28,13 @@ public class OrderServiceImpl implements OrderService {
 
     private ShipmentRepository shipmentRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper, ShipmentRepository shipmentRepository) {
+    private final MessageCostProducer messageCostProducer;
+
+    public OrderServiceImpl(OrderRepository orderRepository, OrderMapper orderMapper, ShipmentRepository shipmentRepository, MessageCostProducer messageCostProducer) {
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
-        this.shipmentRepository =shipmentRepository;
+        this.shipmentRepository = shipmentRepository;
+        this.messageCostProducer = messageCostProducer;
     }
 
     public void setOrderRepository(OrderRepository orderRepository) {
@@ -59,9 +63,13 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO saveOrder(SaveOrderDTO dto) {
         List<Shipment> shipments = Optional.ofNullable(dto.shipmentsIds()).map(shipmentRepository::findAllById).orElse(List.of());
-        Order order = orderMapper.toOrder(dto,shipments);
+        Order order = orderMapper.toOrder(dto, shipments);
         shipments.forEach(shipment -> shipment.setOrder(order));
-        return orderMapper.toOrderDto(orderRepository.save(order));
+        OrderDTO orderDTO = orderMapper.toOrderDto(orderRepository.save(order));
+        if (!shipments.isEmpty() && dto.totalCost() == 0) {
+            messageCostProducer.sendMessage(orderDTO, shipments);
+        }
+        return orderDTO;
     }
 
     @Override
@@ -76,7 +84,12 @@ public class OrderServiceImpl implements OrderService {
         List<Shipment> shipments = Optional.ofNullable(dto.shipmentsIds()).map(shipmentRepository::findAllById).orElse(existingOrder.getShipments());
         existingOrder.setShipments(shipments);
         shipments.forEach(shipment -> shipment.setOrder(existingOrder));
-        return orderMapper.toOrderDto(orderRepository.save(existingOrder));
+        OrderDTO orderDTO = orderMapper.toOrderDto(orderRepository.save(existingOrder));
+        if ((dto.shipmentsIds() != null && !dto.shipmentsIds().isEmpty()) || existingOrder.getTotalCost() == 0) {
+            messageCostProducer.sendMessage(orderDTO, shipments);
+            existingOrder.setTotalCost(0);
+        }
+        return orderDTO;
     }
 
     @Override
@@ -87,6 +100,14 @@ public class OrderServiceImpl implements OrderService {
         } else {
             throw new CustomExceptions.OrderNotFoundException("Order not found with id: " + id);
         }
+    }
+
+    @Override
+    @Transactional
+    public OrderDTO updateTotalCost(Long id, double totalCost){
+        Order existingOrder =  findOrderById(id);
+        existingOrder.setTotalCost(totalCost);
+        return orderMapper.toOrderDto(orderRepository.save(existingOrder));
     }
 
     private Order findOrderById(Long id){
