@@ -18,6 +18,18 @@ public class RabbitMQConfiguration {
 
     public static final String WEB_KEY = "web.key";
 
+    public static final String COST_QUEUE = "costQueue";
+
+    public static final String COST_EXCHANGE = "costExchange";
+
+    public static final String COST_KEY = "cost.key";
+
+    public static final String TOTAL_COST_QUEUE = "totalCostQueue";
+
+    public static final String TOTAL_COST_EXCHANGE = "totalCostQueue";
+
+    public static final String TOTAL_COST_KEY = "totalCostQueue";
+
 
     @Bean
     public Queue emailQueue() {
@@ -47,6 +59,36 @@ public class RabbitMQConfiguration {
     @Bean
     Binding webBinding(Queue webQueue, Exchange webExchange) {
         return BindingBuilder.bind(webQueue).to(webExchange).with(WEB_KEY).noargs();
+    }
+
+    @Bean
+    public Queue costQueue() {
+        return new Queue(COST_QUEUE, false);
+    }
+
+    @Bean
+    Exchange costExchange() {
+        return new TopicExchange(COST_EXCHANGE, false, false);
+    }
+
+    @Bean
+    Binding costBinding(Queue costQueue, Exchange costExchange) {
+        return BindingBuilder.bind(costQueue).to(costExchange).with(COST_KEY).noargs();
+    }
+
+    @Bean
+    public Queue totalCostQueue() {
+        return new Queue(TOTAL_COST_QUEUE, false);
+    }
+
+    @Bean
+    Exchange totalCostExchange() {
+        return new TopicExchange(TOTAL_COST_EXCHANGE, false, false);
+    }
+
+    @Bean
+    Binding totalCostBinding(Queue totalCostQueue, Exchange totalCostExchange) {
+        return BindingBuilder.bind(totalCostQueue).to(totalCostExchange).with(TOTAL_COST_KEY).noargs();
     }
 
     @Bean

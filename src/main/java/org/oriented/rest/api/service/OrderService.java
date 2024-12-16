@@ -16,4 +16,6 @@ public interface OrderService {
     OrderDTO updateOrder(Long id, UpdateOrderDTO entity);
 
     void deleteOrder(Long id);
+
+    OrderDTO updateTotalCost(Long id, double totalCost);
 }
